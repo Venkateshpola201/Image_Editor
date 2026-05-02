@@ -24,14 +24,19 @@ from utils import (
 # PAGE CONFIG
 st.set_page_config(
     page_title="Image Editor",
+    page_icon="🖼️",
     layout="wide"
 )
 
-st.title("Image Editor using Streamlit & OpenCV")
+st.title("🖼️ Image Editor using Streamlit & OpenCV")
+
+
+# RESET BUTTON
+reset = st.sidebar.button("Reset Filters")
 
 
 # SIDEBAR
-st.sidebar.header("Image Screens")
+st.sidebar.header("Image Filters")
 
 
 # BASIC FILTERS
@@ -39,7 +44,7 @@ blur_value = st.sidebar.slider(
     "Blur",
     1,
     51,
-    1,
+    1 if reset else 1,
     step=2
 )
 
@@ -47,39 +52,43 @@ sharpness_value = st.sidebar.slider(
     "Sharpness",
     0.0,
     3.0,
-    0.0
+    0.0 if reset else 0.0
 )
 
 brightness_value = st.sidebar.slider(
     "Brightness",
     -100,
     100,
-    0
+    0 if reset else 0
 )
 
 contrast_value = st.sidebar.slider(
     "Contrast",
     0.5,
     3.0,
-    1.0
+    1.0 if reset else 1.0
 )
 
 
 # TOGGLE FILTERS
 edge_toggle = st.sidebar.checkbox(
-    "Edge Detection"
+    "Edge Detection",
+    value=False if reset else False
 )
 
 gray_toggle = st.sidebar.checkbox(
-    "Grayscale"
+    "Grayscale",
+    value=False if reset else False
 )
 
 sepia_toggle = st.sidebar.checkbox(
-    "Sepia"
+    "Sepia",
+    value=False if reset else False
 )
 
 cartoon_toggle = st.sidebar.checkbox(
-    "Cartoon"
+    "Cartoon",
+    value=False if reset else False
 )
 
 
@@ -88,14 +97,14 @@ t1 = st.sidebar.slider(
     "Threshold 1",
     0,
     255,
-    100
+    100 if reset else 100
 )
 
 t2 = st.sidebar.slider(
     "Threshold 2",
     0,
     255,
-    200
+    200 if reset else 200
 )
 
 
@@ -104,7 +113,7 @@ angle = st.sidebar.slider(
     "Rotate Image",
     -180,
     180,
-    0
+    0 if reset else 0
 )
 
 
@@ -116,7 +125,8 @@ flip_option = st.sidebar.selectbox(
         "Horizontal",
         "Vertical",
         "Both"
-    ]
+    ],
+    index=0
 )
 
 
@@ -127,14 +137,14 @@ width = st.sidebar.slider(
     "Width",
     100,
     1000,
-    500
+    500 if reset else 500
 )
 
 height = st.sidebar.slider(
     "Height",
     100,
     1000,
-    500
+    500 if reset else 500
 )
 
 
@@ -260,7 +270,8 @@ if uploaded_file is not None:
             cv2.cvtColor(
                 original,
                 cv2.COLOR_BGR2RGB
-            )
+            ),
+            use_container_width=True
         )
 
 
@@ -272,7 +283,8 @@ if uploaded_file is not None:
             cv2.cvtColor(
                 processed,
                 cv2.COLOR_BGR2RGB
-            )
+            ),
+            use_container_width=True
         )
 
 
@@ -282,7 +294,7 @@ if uploaded_file is not None:
     )
 
     st.download_button(
-        label="Download Image",
+        label="⬇️ Download Image",
         data=image_bytes,
         file_name="edited_image.png",
         mime="image/png"
